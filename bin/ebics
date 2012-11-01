@@ -1,0 +1,6 @@
+#!/bin/env ruby
+
+require 'lib/ebics'
+require 'ebics/cli'
+
+Ebics::Cli.start(ARGV)

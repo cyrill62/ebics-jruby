@@ -1,0 +1,1 @@
+require 'ebics/requestor/ful'
