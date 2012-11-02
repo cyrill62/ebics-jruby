@@ -1,7 +1,7 @@
 require 'ebics/client'
 module Ebics
-  module Requestor
-    class Ful < Ebics::Client
+  module File
+    class Upload < Ebics::Client
       def send_file(path, user_id, product)
         user = users[user_id]
         session = Java::OrgKopiEbicsSession.EbicsSession.new(user, conf)
@@ -22,7 +22,7 @@ puts("\033[01;33m#{Java::OrgKopiEbicsIo::IOUtils.get_file_content(path).inspect}
       def run(path, host_id, partner_id, user_id, password)
         pwd = Java::OrgKopiEbicsSecurity.UserPasswordHandler.new(user_id, password)
 
-        self.load_user(
+        load_user(
           Ebics::Client::URL_EBICS_SERVER,
           Ebics::Client::BANK_NAME,
           host_id,
@@ -32,7 +32,7 @@ puts("\033[01;33m#{Java::OrgKopiEbicsIo::IOUtils.get_file_content(path).inspect}
         )
 
         product = Java::OrgKopiEbicsSession.Product.new('kopiLeft Dev 1.0', Java::JavaUtil.Locale::FRANCE, nil)
-        self.send_file(path, user_id, product)
+        send_file(path, user_id, product)
       end
     end
   end

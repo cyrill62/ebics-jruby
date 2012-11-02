@@ -5,18 +5,46 @@ module Ebics
   class Cli < Thor
     include Thor::Actions
     class_option :test, :aliases => '-t', :desc => 'do not send request to server (simulator mode)'
-    desc 'fdl FILE', 'send FDL request'
-    def fdl(file)
-      FDLRequestor.new(file)
-    end
 
-    desc 'ful FILE', 'send FUL request'
+    desc 'download_certs', 'send FDL request'
     method_option :host_id, :aliases => '-h', :required => true
     method_option :partner_id, :aliases => '-p', :required => true
     method_option :user_id, :aliases => '-u', :required => true
-    def ful(file)
-      require 'ebics/requestor'
-      requestor = Ebics::Requestor::Ful.new
+    def download_certs
+      require 'ebics/hbb'
+      requestor = Ebics::Hbb.new
+      requestor.run(
+        options[:host_id],
+        options[:partner_id],
+        options[:user_id],
+        ask('password:')
+      )
+    end
+
+
+    desc 'download FILE', 'send FDL request'
+    method_option :host_id, :aliases => '-h', :required => true
+    method_option :partner_id, :aliases => '-p', :required => true
+    method_option :user_id, :aliases => '-u', :required => true
+    def download(file)
+      require 'ebics/file/download'
+      requestor = Ebics::File::Download.new
+      requestor.run(
+        file,
+        options[:host_id],
+        options[:partner_id],
+        options[:user_id],
+        ask('password:')
+      )
+    end
+
+    desc 'upload FILE', 'send FUL request'
+    method_option :host_id, :aliases => '-h', :required => true
+    method_option :partner_id, :aliases => '-p', :required => true
+    method_option :user_id, :aliases => '-u', :required => true
+    def upload(file)
+      require 'ebics/file/upload'
+      requestor = Ebics::File::Upload.new
       requestor.run(
         file,
         options[:host_id],

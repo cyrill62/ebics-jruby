@@ -27,8 +27,8 @@ module Ebics
       def run(host_id, partner_id, user_id, password)
         product = Java::OrgKopiEbicsSession.Product.new('kopiLeft Dev 1.0', Java::JavaUtil.Locale::FRANCE, nil)
         pwd = Java::OrgKopiEbicsSecurity.UserPasswordHandler.new(user_id, password)
-        
-        self.load_user(
+
+        load_user(
           Ebics::Client::URL_EBICS_SERVER,
           Ebics::Client::BANK_NAME,
           host_id,
