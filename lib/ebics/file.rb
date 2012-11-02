@@ -1,2 +1,2 @@
 require 'ebics/file/upload'
-#require 'ebics/file/download'
+require 'ebics/file/download'
