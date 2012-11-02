@@ -50,10 +50,33 @@ module Ebics
       #begin
         bank = create_bank(bank_url, bank_name, host_id)
         partner = create_partner(bank, partner_id)
-        users[user_id] = user = Java::OrgKopiEbicsClient.User.new(partner, conf.serialization_manager.deserialize(user_id), password)
+        users[user_id] = @user = Java::OrgKopiEbicsClient.User.new(partner, conf.serialization_manager.deserialize(user_id), password)
       #rescue
       #  log 'user.load.error'
       #end
+    end
+
+    def require_user(options)
+      pwd = Java::OrgKopiEbicsSecurity.UserPasswordHandler.new(options[:user_id], options[:password])
+
+      load_user(
+        options[:bank_url] || URL_EBICS_SERVER,
+        options[:bank_name] || BANK_NAME,
+        options[:host_id],
+        options[:partner_id],
+        options[:user_id],
+        pwd
+      )
+    end
+
+    def require_product(options)
+      @product = Java::OrgKopiEbicsSession.Product.new((options[:product_name] || 'kopiLeft Dev 1.0'), Java::JavaUtil.Locale::FRANCE, nil)
+    end
+
+    def require_user_and_product(options)
+      require_user options
+
+      require_product options
     end
   end
 end

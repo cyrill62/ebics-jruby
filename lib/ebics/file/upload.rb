@@ -2,8 +2,7 @@ require 'ebics/client'
 module Ebics
   module File
     class Upload < Ebics::Client
-      def send_file(path, user_id, product)
-        user = users[user_id]
+      def send_file(path, user, product)
         session = Java::OrgKopiEbicsSession.EbicsSession.new(user, conf)
 
         session.add_session_param 'FORMAT', 'pain.xxx.cfonb160.dct'
@@ -19,20 +18,9 @@ puts("\033[01;33m#{Java::OrgKopiEbicsIo::IOUtils.get_file_content(path).inspect}
         transfer_manager.send_file Java::OrgKopiEbicsIo::IOUtils.get_file_content(path), Java::OrgKopiEbicsSession.OrderType::FUL
       end
 
-      def run(path, host_id, partner_id, user_id, password)
-        pwd = Java::OrgKopiEbicsSecurity.UserPasswordHandler.new(user_id, password)
-
-        load_user(
-          Ebics::Client::URL_EBICS_SERVER,
-          Ebics::Client::BANK_NAME,
-          host_id,
-          partner_id,
-          user_id,
-          pwd
-        )
-
-        product = Java::OrgKopiEbicsSession.Product.new('kopiLeft Dev 1.0', Java::JavaUtil.Locale::FRANCE, nil)
-        send_file(path, user_id, product)
+      def run(path, options)
+        require_user_and_product(options)
+        send_file(path, @user, @product)
       end
     end
   end

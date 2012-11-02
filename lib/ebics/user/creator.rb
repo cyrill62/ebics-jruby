@@ -3,10 +3,10 @@ module Ebics
   module User
     class Creator < Ebics::Client
       def create_user(
-        bank_url, 
-        bank_name, 
+        bank_url,
+        bank_name,
         host_id,
-        partner_id, 
+        partner_id,
         user_id,
         name,
         email,
@@ -52,7 +52,21 @@ module Ebics
         end
       end
 
-      alias :run :create_user
+      def run(name, email, country, organization, saveCertificates, options)
+        create_user(
+          options[:bank_url],
+          options[:bank_name],
+          options[:host_id],
+          options[:partner_id],
+          options[:user_id],
+          name,
+          email,
+          country,
+          organization,
+          saveCertificates,
+          options[:password]
+        )
+      end
     end
   end
 end
