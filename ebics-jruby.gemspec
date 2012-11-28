@@ -2,7 +2,7 @@
 require File.expand_path('../lib/ebics/version', __FILE__)
 
 Gem::Specification.new do |s|
-  s.name          = 'ebics'
+  s.name          = 'ebics-jruby'
   s.version       = Ebics::VERSION
   s.authors       = ['Cyril LEPAGNOT']
   s.email         = ['cyril@lepagnot.fr']
