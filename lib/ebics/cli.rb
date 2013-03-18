@@ -51,7 +51,7 @@ module Ebics
     method_option :partner_id, :aliases => '-p', :required => true
     method_option :user_id, :aliases => '-u', :required => true
     method_option :password, :aliases => '-P'
-    def create(name = 'pebics', email = 'pebics@domaine.fr', country = 'France', organization = 'Euro-Information')
+    def create_user(name = 'pebics', email = 'pebics@domaine.fr', country = 'France', organization = 'Euro-Information')
       require_password
       require 'ebics/user'
       user = Ebics::User::Creator.new
