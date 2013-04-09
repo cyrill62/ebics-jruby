@@ -38,22 +38,22 @@ module Ebics
       end
     end
 
-    def create_bank(url, name, host_id)
-      banks[host_id] = Java::OrgKopiEbicsClient.Bank.new(Java::JavaNet::URL.new(url), name, host_id)
+    def load_bank(url, name, host_id)
+      banks[host_id] = conf.serialization_manager.deserialize(host_id).readObject()
     end
 
-    def create_partner(bank, id)
-      partners[id] = Java::OrgKopiEbicsClient.Partner.new(bank, id)
+    def load_partner(bank, id)
+      partners[id] = Java::OrgKopiEbicsClient.Partner.new(bank, conf.serialization_manager.deserialize(id))
     end
 
     def load_user(bank_url, bank_name, host_id, partner_id, user_id, password)
-      #begin
-        bank = create_bank(bank_url, bank_name, host_id)
-        partner = create_partner(bank, partner_id)
-        users[user_id] = @user = Java::OrgKopiEbicsClient.User.new(partner, conf.serialization_manager.deserialize(user_id), password)
-      #rescue
-      #  log 'user.load.error'
-      #end
+      begin
+        @bank = load_bank(bank_url, bank_name, host_id)
+        @partner = load_partner(@bank, partner_id)
+        users[user_id] = @user = Java::OrgKopiEbicsClient.User.new(@partner, conf.serialization_manager.deserialize(user_id), password)
+      rescue
+        log 'user.load.error'
+      end
     end
 
     def require_user(options)
@@ -77,6 +77,12 @@ module Ebics
       require_user options
 
       require_product options
+    end
+
+    def serialize_user
+      conf.serialization_manager.serialize(@bank)
+      conf.serialization_manager.serialize(@partner)
+      conf.serialization_manager.serialize(@user)
     end
   end
 end

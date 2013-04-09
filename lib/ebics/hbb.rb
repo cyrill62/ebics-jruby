@@ -12,6 +12,7 @@ module Ebics
     def run(options)
       require_user_and_product(options)
       download_certificates(@user, @product)
+      serialize_user
     end
   end
 end

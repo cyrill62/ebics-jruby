@@ -3,7 +3,7 @@ module Ebics
   module User
     class Initiator < Ebics::Client
       def send_init_request(user, product)
-        return if user.initialized?
+        #return if user.initialized?
         session = Java::OrgKopiEbicsSession.EbicsSession.new(user,conf)
         session.product = product
         keymanager = Java::OrgKopiEbicsClient.KeyManagement.new(session)
@@ -13,7 +13,7 @@ module Ebics
       end
 
       def send_hia_request(user, product)
-        return if user.initialized_hia?
+        #return if user.initialized_hia?
         session = Java::OrgKopiEbicsSession.EbicsSession.new(user,conf)
         session.product = product
         keymanager = Java::OrgKopiEbicsClient.KeyManagement.new(session)
@@ -26,8 +26,8 @@ module Ebics
         require_user_and_product(options)
         send_init_request(@user, @product)
         send_hia_request(@user, @product)
+        serialize_user
       end
-
     end
   end
 end

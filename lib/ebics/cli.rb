@@ -26,6 +26,9 @@ module Ebics
     method_option :host_id, :aliases => '-h', :required => true
     method_option :partner_id, :aliases => '-p', :required => true
     method_option :user_id, :aliases => '-u', :required => true
+    method_option :start, :aliases => '-s', :required => true
+    method_option :end, :aliases => '-e', :required => true
+    method_option :format, :aliases => '-f', :required => true
     method_option :password, :aliases => '-P'
     def download(file)
       require_password
@@ -38,6 +41,7 @@ module Ebics
     method_option :host_id, :aliases => '-h', :required => true
     method_option :partner_id, :aliases => '-p', :required => true
     method_option :user_id, :aliases => '-u', :required => true
+    method_option :format, :aliases => '-f', :required => true
     method_option :password, :aliases => '-P'
     def upload(file)
       require_password

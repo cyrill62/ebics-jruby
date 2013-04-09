@@ -2,12 +2,11 @@ require 'ebics/client'
 module Ebics
   module File
     class Upload < Ebics::Client
-      def send_file(path, user, product)
+      def send_file(path, user, product, format, test)
         session = Java::OrgKopiEbicsSession.EbicsSession.new(user, conf)
 
-        session.add_session_param 'FORMAT', 'pain.xxx.cfonb160.dct'
-        session.add_session_param 'TEST', 'true'
-        session.add_session_param 'EBCDIC', 'false'
+        session.add_session_param 'FORMAT', format
+        session.add_session_param 'TEST', 'true' if test
         session.product = product
 
         conf.trace_manager.trace_directory = conf.get_transfer_trace_directory(user)
@@ -21,7 +20,11 @@ module Ebics
 
       def run(path, options)
         require_user_and_product(options)
-        send_file(path, @user, @product)
+        begin
+          send_file(path, @user, @product, options[:format], options[:test])
+        ensure
+          serialize_user
+        end
       end
     end
   end

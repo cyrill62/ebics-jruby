@@ -15,8 +15,10 @@ module Ebics
         saveCertificates,
         password)
 
-        bank = create_bank(bank_url, bank_name, host_id)
-        partner = create_partner(bank, partner_id)
+        bank = Java::OrgKopiEbicsClient.Bank.new(Java::JavaNet::URL.new(bank_url), bank_name, host_id)
+        conf.serialization_manager.serialize(bank)
+        partner = Java::OrgKopiEbicsClient.Partner.new(bank, partner_id)
+        conf.serialization_manager.serialize(partner)
         pwd = Java::OrgKopiEbicsSecurity.UserPasswordHandler.new(user_id, password)
 
         user = Java::OrgKopiEbicsClient.User.new(
@@ -37,6 +39,8 @@ module Ebics
           sm.serialize o
         end
 
+        load_sign_cert(user)
+
         load_letters(user)
 
         users[user_id] = user
@@ -53,7 +57,7 @@ module Ebics
       end
 
       def run(name, email, country, organization, saveCertificates, options)
-        create_user(
+        user = create_user(
           options[:bank_url],
           options[:bank_name],
           options[:host_id],
@@ -66,6 +70,7 @@ module Ebics
           saveCertificates,
           options[:password]
         )
+        conf.serialization_manager.serialize(user)
       end
     end
   end
